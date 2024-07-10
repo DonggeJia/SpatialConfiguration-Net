@@ -1,5 +1,5 @@
 import os
-from solver import Solver
+from solver_from_big import Solver
 from data_loader import get_loader
 from torch.backends import cudnn
 os.chdir('Spatial-U-net for hand bone joint localization')
