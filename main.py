@@ -73,11 +73,11 @@ if __name__ == '__main__':
         # training hyper-parameters
         img_ch = 1
         output_ch = 37
-        num_epochs = 10000
+        num_epochs = 50
         num_epochs_decay = 7000
-        batch_size = 1
+        batch_size = 16
         num_workers = 0
-        lr = 0.000001
+        lr = 1e-3
         beta1 = 0.5  # momentum1 in Adam
         beta2 = 0.999  # momentum2 in Adam
 

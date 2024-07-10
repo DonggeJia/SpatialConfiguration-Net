@@ -6,6 +6,8 @@ from torch import optim
 from network import SCN
 import csv
 import torch.nn as nn
+import matplotlib.pyplot as plt
+from IPython.display import clear_output
 
 class CustomLoss(nn.Module):
     def __init__(self, lambda_=0.00005):
@@ -101,6 +103,9 @@ class Solver(object):
 		return torch.stack(coords)
 	def train(self):
 		"""Train encoder, generator, and discriminator."""
+		fig, ax = plt.subplots(2, 1, figsize=(10, 8))
+		epoch_loss = []
+		
 		SCN_path = os.path.join(self.model_path, '%s-%d-%.4f-%d.pkl' % (self.model_type, self.num_epochs, self.lr, self.num_epochs_decay))
 
 		# SCN Train
@@ -144,6 +149,21 @@ class Solver(object):
 				print('Epoch [%d/%d], Loss: %.4f, \n--[Training] IPE: %.4f, Or: %.4f' % (
 					epoch + 1, self.num_epochs, epoch_loss, IPE_, Number_outliers_))
 				sys.stdout.flush()
+				
+				clear_output(wait=True)
+				ax[0].plot(epoch +1, epoch_loss, 'o', label='Train Loss')
+				ax[0].set_xlabel('Epoch')
+				ax[0].set_ylabel('Loss')
+			
+				ax[1].plot(epoch +1, IPE_, 'o', label='Train IPE')
+				ax[1].set_xlabel('Epoch')
+				ax[1].set_ylabel('IPE')
+			
+				plt.tight_layout()
+				plt.pause(0.1)
+
+
+				
 				# Decay learning rate
 				if (epoch + 1) > (self.num_epochs - self.num_epochs_decay):
 					lr -= (self.lr / float(self.num_epochs_decay))
