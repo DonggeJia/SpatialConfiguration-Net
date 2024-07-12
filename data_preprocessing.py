@@ -5,7 +5,7 @@ from PIL import Image
 from skimage import exposure, filters
 import csv
 import matplotlib.pyplot as plt
-os.chdir('Spatial-U-net for hand bone joint localization')
+#os.chdir('Spatial-U-net for hand bone joint localization')
 
 train_path = './dataset/train/'
 valid_path = './dataset/valid/'

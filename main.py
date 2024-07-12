@@ -1,8 +1,8 @@
 import os
-from solver_from_big import Solver
+from solver import Solver
 from data_loader import get_loader
 from torch.backends import cudnn
-os.chdir('Spatial-U-net for hand bone joint localization')
+#os.chdir('Spatial-U-net for hand bone joint localization')
 
 def main(config):
     cudnn.benchmark = True
