@@ -1,8 +1,9 @@
+
+#import argparse
 import os
 from solver import Solver
 from data_loader import get_loader
 from torch.backends import cudnn
-#os.chdir('Spatial-U-net for hand bone joint localization')
 
 def main(config):
     cudnn.benchmark = True
@@ -12,11 +13,7 @@ def main(config):
         os.makedirs(config.model_path)
     if not os.path.exists(config.result_path):
         os.makedirs(config.result_path)
-    config.result_path = os.path.join(config.result_path,config.model_type)
-    if not os.path.exists(config.result_path):
-        os.makedirs(config.result_path)
     
-
     print(config)
         
     train_loader = get_loader(image_path=config.train_path,
@@ -34,6 +31,7 @@ def main(config):
 
 
     solver = Solver(config, train_loader, valid_loader, test_loader)
+
     
     # Train and sample the images
     if config.mode == 'train':
@@ -67,20 +65,18 @@ if __name__ == '__main__':
     
 #     config = parser.parse_args()
 #     main(config)
-
-    class Config_:
+    class Config2:
 
         # training hyper-parameters
         img_ch = 1
         output_ch = 37
-        num_epochs = 50
-        num_epochs_decay = 7000
-        batch_size = 16
+        num_epochs = 5000
+        num_epochs_decay = 2500
+        batch_size = 1
         num_workers = 0
-        lr = 1e-3
+        lr = 0.0001
         beta1 = 0.5  # momentum1 in Adam
         beta2 = 0.999  # momentum2 in Adam
-
         mode = 'train'
         model_type = 'SCN' 
         model_path = './models'
@@ -89,5 +85,5 @@ if __name__ == '__main__':
         test_path = './dataset/test_input/'
         result_path = './result/'
 
-    config = Config_()
+    config = Config2()
     main(config)

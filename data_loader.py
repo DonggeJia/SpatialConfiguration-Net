@@ -50,7 +50,7 @@ class ImageFolder(data.Dataset):
 			min_val = augmented_image.min()
 			max_val = augmented_image.max()
 			augmented_image = 2 * (augmented_image - min_val) / (max_val - min_val) - 1
-			# If needed, convert back to PIL Image for further processing
+			# convert back to PIL Image for further processing
 			image = Image.fromarray(((augmented_image + 1)/2 * 255).astype(np.uint8))
 			
 			# Example parameters for transformations
