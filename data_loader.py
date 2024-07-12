@@ -54,7 +54,7 @@ class ElasticDeformation:
         # Resample the image using the transform
         resampler = sitk.ResampleImageFilter()
         resampler.SetReferenceImage(image_sitk)
-        resampler.SetInterpolator(sitk.sitkLinear)  # Try other options like sitk.sitkNearestNeighbor, sitk.sitkBSpline
+        resampler.SetInterpolator(sitk.sitkLinear)
         resampler.SetDefaultPixelValue(0)
         resampler.SetTransform(transform)
 
