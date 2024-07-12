@@ -6,6 +6,77 @@ from torch.utils import data
 from torchvision.transforms import functional as F
 from PIL import Image
 
+import numpy as np
+import SimpleITK as sitk
+from PIL import Image
+import matplotlib.pyplot as plt
+
+class ElasticDeformation:
+    """
+    The deformation spatial transformation base class. Randomly transforms points on an image grid and interpolates with splines.
+    """
+    def __init__(self, dim, grid_nodes, physical_dimensions, spline_order, deformation_value):
+        self.dim = dim
+        self.grid_nodes = grid_nodes
+        self.physical_dimensions = physical_dimensions
+        self.spline_order = spline_order
+        self.deformation_value = deformation_value
+
+    def get_deformation_transform(self):
+        """
+        Returns the sitk transform based on the given parameters.
+        """
+        mesh_size = [grid_node - self.spline_order for grid_node in self.grid_nodes]
+
+        t = sitk.BSplineTransform(self.dim, self.spline_order)
+        t.SetTransformDomainOrigin(np.zeros(self.dim))
+        t.SetTransformDomainMeshSize(mesh_size)
+        t.SetTransformDomainPhysicalDimensions(self.physical_dimensions)
+        t.SetTransformDomainDirection(np.eye(self.dim).flatten())
+
+        deform_params = [np.random.uniform(-self.deformation_value, self.deformation_value) for _ in t.GetParameters()]
+        t.SetParameters(deform_params)
+
+        return t
+
+    def apply_deformation(self, image):
+        """
+        Apply the deformation to a given image using the generated transform.
+        :param image: The input image as a NumPy array.
+        :return: Deformed image as a NumPy array.
+        """
+        # Convert the image to a SimpleITK image
+        image_sitk = sitk.GetImageFromArray(image)
+
+        # Get the deformation transform
+        transform = self.get_deformation_transform()
+
+        # Resample the image using the transform
+        resampler = sitk.ResampleImageFilter()
+        resampler.SetReferenceImage(image_sitk)
+        resampler.SetInterpolator(sitk.sitkLinear)  # Try other options like sitk.sitkNearestNeighbor, sitk.sitkBSpline
+        resampler.SetDefaultPixelValue(0)
+        resampler.SetTransform(transform)
+
+        transformed_image_sitk = resampler.Execute(image_sitk)
+
+        # Apply light smoothing after deformation to reduce artifacts
+        transformed_image_sitk = sitk.SmoothingRecursiveGaussian(transformed_image_sitk, 0.001)
+
+        # Convert the transformed image back to a NumPy array
+        transformed_image_np = sitk.GetArrayFromImage(transformed_image_sitk)
+
+        return transformed_image_np
+
+# Example usage
+deformation = ElasticDeformation(
+    dim=2,
+    grid_nodes=[12, 12],
+    physical_dimensions=[256, 256],
+    spline_order=3,
+    deformation_value=5  # Adjusted deformation value
+)
+
 class ImageFolder(data.Dataset):
 	def __init__(self, root,mode='train'):
 		"""Initializes image paths and preprocessing module."""
@@ -64,10 +135,12 @@ class ImageFolder(data.Dataset):
 			heatmap_images = [self.deterministic_transform(heatmap, rotation_degree, (translate_x, translate_y), scale) for heatmap in heatmap_images]
 
 		image_np = np.array(image, dtype=np.float32)
+		image_np = deformation.apply_deformation(image_np)
 		image = (image_np / 255.0) * 2 - 1
 
 		for i, heatmap in enumerate(heatmap_images):
 			heatmap_np = np.array(heatmap, dtype=np.float32)
+			heatmap_np = deformation.apply_deformation(heatmap_np)
 			heatmap_images[i] = (heatmap_np / 255.0) * 2 - 1
 
 		# Convert the image and heatmaps to tensors
