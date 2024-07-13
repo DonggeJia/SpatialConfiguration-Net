@@ -5,11 +5,7 @@ import torch
 from torch.utils import data
 from torchvision.transforms import functional as F
 from PIL import Image
-
-import numpy as np
 import SimpleITK as sitk
-from PIL import Image
-import matplotlib.pyplot as plt
 
 class ElasticDeformation:
     """

@@ -31,13 +31,13 @@ class Solver(object):
 		self.valid_loader = valid_loader
 		self.test_loader = test_loader
 
-		# Models
+		# Model
 		self.SCN = None
 		self.optimizer = None
 		self.img_ch = config.img_ch
 		self.output_ch = config.output_ch
 
-		# Optimizer
+		# Hyperparameters
 		self.lr = config.lr
 		self.beta1 = config.beta1
 		self.beta2 = config.beta2
