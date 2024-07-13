@@ -12,7 +12,7 @@ This model is inspired by the paper [Integrating spatial configuration into heat
 
 SpatialConfiguration-Net comprises two components: one delivers locally accurate but potentially ambiguous candidate predictions, and the other incorporates spatial configuration to improve robustness against landmark misidentification by eliminating ambiguities.
 
-The architecture of these two interacting components is flexible. This implementation follows a specific architecture, as shown below:
+The architecture of these two interacting components is flexible. This implementation follows a specific architecture, as shown below. I understand that this image might not be large enough to display the entire architecture clearly, so please download it and zoom in for a better view.
 
 <p align="center">
     <img src="docs/SCN_hiddenlayer.png" width="750"/>
@@ -58,9 +58,9 @@ On-the-fly data augmentation includes:
 
 ## Experiments
 
-Model performance on hand bone joint labeling is evaluated by the average Euclidean distances between predicted and corresponding target landmarks (IPE). Another evaluation metric is the number of outliers outside a given radius (Or), as described by ([Payer et al. 2019](https://www.sciencedirect.com/science/article/pii/S1361841518305784)).
+Model performance on hand bone joint labeling is evaluated by the average Euclidean distances between predicted and corresponding target landmarks (IPE). Another evaluation metric is the number of outliers outside a given radius (Or), as described by [Payer et al. (2019)](https://www.sciencedirect.com/science/article/pii/S1361841518305784).
 
-Using the Adam optimizer with a learning rate of 0.0001, first moment of 0.5, and second moment of 0.999, the loss, IPE, and Or variation with respect to epochs are as follows:
+Using the Adam optimizer with a learning rate of 0.0001, a first moment of 0.5, and a second moment of 0.999, the loss, IPE, and Or variation with respect to epochs are as follows:
 
 <p align="center">
     <img src="docs/Experiment1.png" width="750"/>
@@ -73,7 +73,7 @@ If a linear decay of the learning rate is applied, the model performance is as f
 <p align="center">
     <img src="docs/Experiment2.png" width="750"/>
 </p>
-The best model during training achieves an IPE of 1.262 and Or (radius = 10 pixels) of 0.6667 on the test dataset.
+The best model obtained achieves an IPE of 1.262 and Or (radius = 10 pixels) of 0.6667 on the test dataset.
 
 ## Usage
 
