@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-REFERENCE_IMAGE_PATH = "train/3209.jpg"  # Picked as it has higher contrast
+REFERENCE_IMAGE_PATH = "train/3209.jpg"  # Picked the image as it has higher contrast
 GAUSSIAN_GAMMA = 100.0
 GAUSSIAN_SIGMA = 2.0
 
